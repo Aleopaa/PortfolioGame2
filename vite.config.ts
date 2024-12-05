@@ -9,5 +9,5 @@ export default defineConfig({
     outDir: "dist",
   },
   plugins: [react(), glslify()],
-  assetsInclude: ["**/*.glb"],
+  assetsInclude: ["**/*.glb", "**/*.png"],
 });
