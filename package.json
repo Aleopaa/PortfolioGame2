@@ -2,7 +2,7 @@
   "name": "my-first-react-three-fiber-app",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://Aleopaa.github.io/PortfolioGame2",
+  "homepage": "https://aleopaa.github.io/PortfolioGame2",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
