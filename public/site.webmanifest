@@ -1,9 +1,0 @@
-{
-  "name": "Portfolio Game",
-  "short_name": "Portfolio",
-  "description": "A portfolio game to showcase my work",
-  "start_url": "/PortfolioGame2/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000"
-}
