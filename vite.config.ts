@@ -7,6 +7,9 @@ export default defineConfig({
   base: "/PortfolioGame2/",
   build: {
     outDir: "dist",
+    rollupOptions: {
+      input: "src/main.tsx",
+    },
   },
   plugins: [react(), glslify()],
   assetsInclude: ["**/*.glb", "**/*.png"],
