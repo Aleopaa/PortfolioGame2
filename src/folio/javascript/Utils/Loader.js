@@ -100,12 +100,14 @@ export default class Resources extends EventEmitter
      */
     load(_resources = []) {
         for (const _resource of _resources) {
+
+            console.log(`Attempting to load resource:`, _resource);
             this.toLoad++;
     
             const extensionMatch = _resource.source.match(/\.([a-z]+)$/);
     
             if (extensionMatch && extensionMatch[1]) {
-                const extension = extensionMatch[1];
+                const extension = extensionMatch[1].toLowerCase();
                 const loader = this.loaders.find((_loader) => _loader.extensions.includes(extension));
     
                 if (loader) {
