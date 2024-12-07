@@ -98,30 +98,23 @@ export default class Resources extends EventEmitter
     /**
      * Load
      */
-    load(_resources = [])
-    {
-        for(const _resource of _resources)
-        {
-            this.toLoad++
-            const extensionMatch = _resource.source.match(/\.([a-z]+)$/)
-
-            if(typeof extensionMatch[1] !== 'undefined')
-            {
-                const extension = extensionMatch[1]
-                const loader = this.loaders.find((_loader) => _loader.extensions.find((_extension) => _extension === extension))
-
-                if(loader)
-                {
-                    loader.action(_resource)
+    load(_resources = []) {
+        for (const _resource of _resources) {
+            this.toLoad++;
+    
+            const extensionMatch = _resource.source.match(/\.([a-z]+)$/);
+    
+            if (extensionMatch && extensionMatch[1]) {
+                const extension = extensionMatch[1];
+                const loader = this.loaders.find((_loader) => _loader.extensions.includes(extension));
+    
+                if (loader) {
+                    loader.action(_resource);
+                } else {
+                    console.warn(`Cannot find loader for ${_resource}`);
                 }
-                else
-                {
-                    console.warn(`Cannot found loader for ${_resource}`)
-                }
-            }
-            else
-            {
-                console.warn(`Cannot found extension of ${_resource}`)
+            } else {
+                console.warn(`Cannot find extension for ${_resource.source}`);
             }
         }
     }
