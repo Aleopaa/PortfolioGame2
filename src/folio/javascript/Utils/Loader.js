@@ -3,13 +3,11 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 
-export default class Resources extends EventEmitter
-{
+export default class Resources extends EventEmitter {
     /**
      * Constructor
      */
-    constructor()
-    {
+    constructor() {
         super()
 
         this.setLoaders()
@@ -22,24 +20,20 @@ export default class Resources extends EventEmitter
     /**
      * Set loaders
      */
-    setLoaders()
-    {
+    setLoaders() {
         this.loaders = []
 
         // Images
         this.loaders.push({
             extensions: ['jpg', 'png'],
-            action: (_resource) =>
-            {
+            action: (_resource) => {
                 const image = new Image()
 
-                image.addEventListener('load', () =>
-                {
+                image.addEventListener('load', () => {
                     this.fileLoadEnd(_resource, image)
                 })
 
-                image.addEventListener('error', () =>
-                {
+                image.addEventListener('error', () => {
                     this.fileLoadEnd(_resource, image)
                 })
 
@@ -54,10 +48,8 @@ export default class Resources extends EventEmitter
 
         this.loaders.push({
             extensions: ['drc'],
-            action: (_resource) =>
-            {
-                dracoLoader.load(_resource.source, (_data) =>
-                {
+            action: (_resource) => {
+                dracoLoader.load(_resource.source, (_data) => {
                     this.fileLoadEnd(_resource, _data)
 
                     DRACOLoader.releaseDecoderModule()
@@ -71,10 +63,8 @@ export default class Resources extends EventEmitter
 
         this.loaders.push({
             extensions: ['glb', 'gltf'],
-            action: (_resource) =>
-            {
-                gltfLoader.load(_resource.source, (_data) =>
-                {
+            action: (_resource) => {
+                gltfLoader.load(_resource.source, (_data) => {
                     this.fileLoadEnd(_resource, _data)
                 })
             }
@@ -85,10 +75,8 @@ export default class Resources extends EventEmitter
 
         this.loaders.push({
             extensions: ['fbx'],
-            action: (_resource) =>
-            {
-                fbxLoader.load(_resource.source, (_data) =>
-                {
+            action: (_resource) => {
+                fbxLoader.load(_resource.source, (_data) => {
                     this.fileLoadEnd(_resource, _data)
                 })
             }
@@ -103,20 +91,37 @@ export default class Resources extends EventEmitter
 
             console.log(`Attempting to load resource:`, _resource);
             this.toLoad++;
-    
-            const extensionMatch = _resource.source.match(/\.([a-z]+)$/);
-    
-            if (extensionMatch && extensionMatch[1]) {
-                const extension = extensionMatch[1].toLowerCase();
-                const loader = this.loaders.find((_loader) => _loader.extensions.includes(extension));
-    
+
+            if (_resource.source.startsWith('data:')) {
+                const mimeType = _resource.source.split(';')[0].split(':')[1];
+                const extension = mimeType.split('/')[1];
+
+                const loader = this.loaders.find((_loader) =>
+                    _loader.extensions.includes(extension)
+                );
+
                 if (loader) {
                     loader.action(_resource);
                 } else {
                     console.warn(`Cannot find loader for ${_resource}`);
                 }
             } else {
-                console.warn(`Cannot find extension for ${_resource.source}`);
+                const extensionMatch = _resource.source.match(/\.([a-z]+)$/);
+
+                if (extensionMatch && extensionMatch[1]) {
+                    const extension = extensionMatch[1].toLowerCase();
+                    const loader = this.loaders.find((_loader) =>
+                        _loader.extensions.includes(extension)
+                    );
+
+                    if (loader) {
+                        loader.action(_resource);
+                    } else {
+                        console.warn(`Cannot find loader for ${_resource}`);
+                    }
+                } else {
+                    console.warn(`Cannot find extension for ${_resource.source}`);
+                }
             }
         }
     }
@@ -124,15 +129,13 @@ export default class Resources extends EventEmitter
     /**
      * File load end
      */
-    fileLoadEnd(_resource, _data)
-    {
+    fileLoadEnd(_resource, _data) {
         this.loaded++
         this.items[_resource.name] = _data
 
         this.trigger('fileEnd', [_resource, _data])
 
-        if(this.loaded === this.toLoad)
-        {
+        if (this.loaded === this.toLoad) {
             this.trigger('end')
         }
     }
