@@ -103,7 +103,7 @@ export default class Resources extends EventEmitter {
                 if (loader) {
                     loader.action(_resource);
                 } else {
-                    console.warn(`Cannot find loader for ${_resource}`);
+                    console.warn(`Cannot find loader for ${_resource.source}`);
                 }
             } else {
                 const extensionMatch = _resource.source.match(/\.([a-z]+)$/);
