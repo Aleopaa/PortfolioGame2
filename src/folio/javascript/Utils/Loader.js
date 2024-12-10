@@ -88,36 +88,51 @@ export default class Resources extends EventEmitter {
      */
     load(_resources = []) {
         for (const _resource of _resources) {
-
             console.log(`Attempting to load resource:`, _resource);
             this.toLoad++;
-
+    
             if (_resource.source.startsWith('data:')) {
-                const mimeType = _resource.source.split(';')[0].split(':')[1];
-                const extension = mimeType.split('/')[1];
-
-                const loader = this.loaders.find((_loader) =>
-                    _loader.extensions.includes(extension)
-                );
-
-                if (loader) {
-                    loader.action(_resource);
+                // Handle data URIs
+                const mimeType = _resource.source.split(';')[0].split(':')[1]; // Extract MIME type
+                const extension = mimeType.split('/')[1]; // Extract extension
+    
+                // Special case for GLTF binaries
+                if (mimeType === 'model/gltf-binary') {
+                    const loader = this.loaders.find((_loader) =>
+                        _loader.extensions.includes('glb')
+                    );
+    
+                    if (loader) {
+                        loader.action(_resource);
+                    } else {
+                        console.warn(`Cannot find loader for GLTF binary data URI:`, _resource.source);
+                    }
                 } else {
-                    console.warn(`Cannot find loader for ${_resource.source}`);
+                    // Handle other data URIs
+                    const loader = this.loaders.find((_loader) =>
+                        _loader.extensions.includes(extension)
+                    );
+    
+                    if (loader) {
+                        loader.action(_resource);
+                    } else {
+                        console.warn(`Cannot find loader for ${_resource.source}`);
+                    }
                 }
             } else {
+                // Handle regular file paths
                 const extensionMatch = _resource.source.match(/\.([a-z]+)$/);
-
+    
                 if (extensionMatch && extensionMatch[1]) {
                     const extension = extensionMatch[1].toLowerCase();
                     const loader = this.loaders.find((_loader) =>
                         _loader.extensions.includes(extension)
                     );
-
+    
                     if (loader) {
                         loader.action(_resource);
                     } else {
-                        console.warn(`Cannot find loader for ${_resource}`);
+                        console.warn(`Cannot find loader for ${_resource.source}`);
                     }
                 } else {
                     console.warn(`Cannot find extension for ${_resource.source}`);
