@@ -64,7 +64,7 @@ export default class InformationSection
                 labelTexture: this.resources.items.informationContactLinkedinLabelTexture
             },
             {
-                href: 'mailto:simon.bruno.77@gmail.com',
+                href: 'https://aleopaa.github.io/CV/',
                 labelTexture: this.resources.items.informationContactMailLabelTexture
             }
         ]
