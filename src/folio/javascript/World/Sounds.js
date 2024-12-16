@@ -210,12 +210,12 @@ export default class Sounds
                 name: 'testThree',
                 sounds: [booksFalling],
                 minDelta: 0,
-                velocityMin: 1,
+                velocityMin: 0.5,
                 velocityMultiplier: 1,
                 volumeMin: 0.1,
                 volumeMax: 0.5,
-                rateMin: 0.75,
-                rateMax: 1
+                rateMin: 0.9,
+                rateMax: 1.1
             }
         ]
 
