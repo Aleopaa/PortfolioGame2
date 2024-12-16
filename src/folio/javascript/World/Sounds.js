@@ -209,7 +209,7 @@ export default class Sounds
             {
                 name: 'testThree',
                 sounds: [booksFalling],
-                minDelta: 0,
+                minDelta: Math.random() * 100 + 50,
                 velocityMin: 0.5,
                 velocityMultiplier: 1,
                 volumeMin: 0.1,
