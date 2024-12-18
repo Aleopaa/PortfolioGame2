@@ -2,67 +2,106 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <title>Aleksandra Opacic</title>
     <meta
       name="description"
       content="Creative developer, living in London always looking to make Tech creative."
     />
+    <!-- Other meta tags omitted for brevity -->
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <style>
+      #spotifyPlayer {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 320px;
+        background-color: #181818;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        font-family: "Comic Neue", sans-serif;
+      }
 
-    <meta itemprop="name" content="Bruno Simon - Creative developer" />
-    <meta
-      itemprop="description"
-      content="Creative developer, living in London always looking to make Tech creative."
-    />
-    <meta itemprop="image"
-    content=https://bruno-simon.com/social/share-1200x630.png>
+      #spotifyPlayer h2 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+      }
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Bruno Simon - Creative developer" />
-    <meta
-      name="twitter:description"
-      content="Creative developer, living in London always looking to make Tech creative."
-    />
-    <meta
-      name="twitter:image"
-      content="https://bruno-simon.com/social/share-1200x600.png"
-    />
+      #trackInfo {
+        display: flex;
+        align-items: center;
+        margin-top: 15px;
+      }
 
-    <meta property="og:site_name" content="Aleksandra Opacic Portfolio" />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:url"
-      content="https://aleopaa.github.io/PortfolioGame2/"
-    />
-    <meta property="og:title" content="Aleksandra Opacic Portfolio" />
-    <meta
-      property="og:description"
-      content="Creative developer living in Paris, freelancer, former lead developer at Immersive Garden, former developer at Uzik and teacher."
-    />
-    <meta
-      property="og:image"
-      content="https://aleopaa.github.io/PortfolioGame2/favicon/Thumbnail.png"
-    />
+      #albumArt {
+        width: 50px;
+        height: 50px;
+        border-radius: 5px;
+        margin-right: 10px;
+      }
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      #trackName,
+      #trackArtist {
+        margin: 0;
+        color: #bbb;
+        font-size: 14px;
+      }
 
-    <meta name="apple-mobile-web-app-title" content="Bruno Simon" />
-    <meta name="application-name" content="Bruno Simon" />
-    <meta name="msapplication-TileColor" content="#da532c" />
-    <meta name="theme-color" content="#ffffff" />
+      #trackName {
+        font-size: 16px;
+        font-weight: bold;
+      }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=block"
-      rel="stylesheet"
-    />
+      #trackArtist {
+        font-size: 12px;
+      }
+
+      #spotifyPlayer button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        margin: 10px;
+      }
+
+      #spotifyPlayer button:focus {
+        outline: none;
+      }
+
+      #spotifyPlayer button:hover {
+        color: #1db954;
+      }
+    </style>
   </head>
+
   <body>
     <div id="root"></div>
     <canvas class="canvas js-canvas"></canvas>
     <script type="module" src="/src/main.tsx"></script>
 
+    <!-- Spotify Player UI -->
+    <div id="spotifyPlayer" style="display: none">
+      <h2>Now Playing</h2>
+      <!-- Only one "Now Playing" here -->
+      <div id="trackInfo">
+        <img id="albumArt" src="" alt="Album Art" />
+        <div>
+          <p id="trackName"></p>
+          <p id="trackArtist"></p>
+        </div>
+      </div>
+      <div>
+        <button id="togglePlay">&#9654;</button>
+        <!-- Play/Pause -->
+        <button id="prevTrack">&#9664;</button>
+        <!-- Previous -->
+        <button id="nextTrack">&#9654;&#9654;</button>
+        <!-- Next -->
+      </div>
+    </div>
     <div class="threejs-journey is-hover-none js-threejs-journey">
       <div class="message js-message">
         <div class="boy">
@@ -78,6 +117,7 @@
           <div class="tip"></div>
         </div>
       </div>
+
       <div class="message js-message">
         <div class="bubble">
           <div class="text">
@@ -86,6 +126,7 @@
           <div class="tip"></div>
         </div>
       </div>
+
       <div class="message js-message is-answers">
         <a href="#" class="answer is-no js-no">
           <span class="background"></span>
@@ -103,6 +144,7 @@
           <span class="label">Yes, teach me!</span>
         </a>
       </div>
+
       <div class="message js-message">
         <div class="bubble">
           <div class="text">
@@ -113,17 +155,110 @@
       </div>
     </div>
 
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=UA-3966601-5"
-    ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "UA-3966601-5");
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        const token =
+          "BQB9cb8tNAQHnf1U01R4nAnEsrEaFqR1jPO8tTd3881h6eCoQS042x6nTuFFeccDwQLaXQdeZQoiEgI43ul231KrblzLZeR3_J2TqjZaDUXL6gCzLhcGyHEWGbxnPBk6Ttxh1VvpVta9TJYXReDEDFfEnbv6--O118HA1VughcfmNB8qDswMYc65HbUUTrwcuSLw0Fn8613udih0Tew"; // Replace with your actual access token
+        const player = new Spotify.Player({
+          name: "Web Playback SDK Player",
+          getOAuthToken: (cb) => {
+            cb(token);
+          },
+          volume: 0.5,
+        });
+
+        player.addListener("ready", ({ device_id }) => {
+          console.log("Ready with Device ID", device_id);
+          window.device_id = device_id;
+
+          // Show the player once it's ready
+          document.getElementById("spotifyPlayer").style.display = "block";
+
+          // Start playing the playlist once ready
+          playPlaylist(device_id, "spotify:playlist:3Sg5A4Gmg8KfyXC504GU6y"); // Your playlist URI
+        });
+
+        player.addListener("not_ready", ({ device_id }) => {
+          console.log("Device ID has gone offline", device_id);
+        });
+
+        document.getElementById("togglePlay").onclick = function () {
+          player.togglePlay();
+        };
+
+        document.getElementById("prevTrack").onclick = function () {
+          player.previousTrack();
+        };
+
+        document.getElementById("nextTrack").onclick = function () {
+          player.nextTrack();
+        };
+
+        player.connect();
+
+        // Play the playlist
+        function playPlaylist(device_id, playlistUri) {
+          fetch(
+            `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`,
+            {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                context_uri: playlistUri, // context_uri for playlists
+              }),
+            }
+          )
+            .then((response) => {
+              if (response.ok) {
+                console.log("Playlist is playing!");
+              } else {
+                console.log(
+                  "Error playing playlist:",
+                  response.status,
+                  response.statusText
+                );
+              }
+            })
+            .catch((err) => console.log("Error playing playlist:", err));
+        }
+
+        // Function to update track info
+        function updateTrackInfo() {
+          fetch("https://api.spotify.com/v1/me/player/currently-playing", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data && data.item) {
+                const track = data.item;
+
+                // Update track name and artist
+                document.getElementById("trackName").textContent = track.name;
+                document.getElementById("trackArtist").textContent =
+                  track.artists.map((artist) => artist.name).join(", ");
+
+                // Update album art
+                const albumImages = track.album.images;
+                if (albumImages && albumImages.length > 0) {
+                  document.getElementById("albumArt").src = albumImages[0].url; // Use the first image
+                }
+              }
+            })
+            .catch((err) => console.log("Error fetching current track:", err));
+        }
+
+        // Call updateTrackInfo every 5 seconds to keep track info updated
+        setInterval(updateTrackInfo, 5000);
+
+        // Initial track info fetch
+        updateTrackInfo();
+      };
     </script>
   </body>
 </html>

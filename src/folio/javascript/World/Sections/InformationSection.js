@@ -56,8 +56,8 @@ export default class InformationSection
         // Options
         this.links.options = [
             {
-                href: 'https://www.linkedin.com/in/aleksandra-opacic-069251171/',
-                labelTexture: this.resources.items.informationContactGithubLabelTexture
+                href: 'mailto:yourname@example.com?subject=Hello&body=Hi,%20I%20would%20like%20to%20get%20in%20touch.',
+                labelTexture: this.resources.items.informationContactMailLabelTexture
             },
             {
                 href: 'https://www.linkedin.com/in/aleksandra-opacic-069251171/',
