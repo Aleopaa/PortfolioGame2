@@ -2,14 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aleksandra Opacic</title>
     <meta
       name="description"
       content="Creative developer, living in London always looking to make Tech creative."
     />
-    <!-- Other meta tags omitted for brevity -->
-    <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <style>
+      /* General Styles */
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      /* Spotify Player Styles */
       #spotifyPlayer {
         position: fixed;
         bottom: 20px;
@@ -20,7 +26,8 @@
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        font-family: "Comic Neue", sans-serif;
+        display: flex;
+        flex-direction: column;
       }
 
       #spotifyPlayer h2 {
@@ -29,236 +36,129 @@
         font-weight: bold;
       }
 
-      #trackInfo {
-        display: flex;
-        align-items: center;
-        margin-top: 15px;
-      }
-
-      #albumArt {
-        width: 50px;
-        height: 50px;
-        border-radius: 5px;
-        margin-right: 10px;
-      }
-
-      #trackName,
-      #trackArtist {
-        margin: 0;
-        color: #bbb;
-        font-size: 14px;
-      }
-
-      #trackName {
-        font-size: 16px;
-        font-weight: bold;
-      }
-
-      #trackArtist {
-        font-size: 12px;
-      }
-
-      #spotifyPlayer button {
-        background: none;
-        border: none;
+      #minimizeButton {
+        background-color: #1db954;
         color: white;
-        font-size: 20px;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
         cursor: pointer;
-        margin: 10px;
+        font-size: 16px;
+        margin-left: 10px;
       }
 
-      #spotifyPlayer button:focus {
-        outline: none;
+      #minimizeButton:hover {
+        background-color: #1ed760;
       }
 
-      #spotifyPlayer button:hover {
-        color: #1db954;
+      #spotifyPlayerContainer {
+        position: relative;
+        width: 100%;
+        height: 352px;
+      }
+
+      #spotifyIframe {
+        border-radius: 12px;
+        border: none;
+      }
+
+      #spotifyPlayerMinimized {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #181818;
+        padding: 10px 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        display: none;
+      }
+
+      #spotifyPlayerMinimized button {
+        background-color: #1db954;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #spotifyPlayerMinimized button:hover {
+        background-color: #1ed760;
+      }
+
+      /* Additional Canvas Styles */
+      .canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Three.js Journey Content */
+      .threejs-journey {
+        position: relative;
+        z-index: 10;
       }
     </style>
+    <script type="module" crossorigin src="/assets/index.cc25ea5e.js"></script>
+    <link rel="stylesheet" href="/assets/index.5ff4e04f.css">
   </head>
-
   <body>
+    <!-- Root Element for React/Vite -->
     <div id="root"></div>
+
+    <!-- Background Canvas -->
     <canvas class="canvas js-canvas"></canvas>
-    <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Spotify Player UI -->
-    <div id="spotifyPlayer" style="display: none">
-      <h2>Now Playing</h2>
-      <!-- Only one "Now Playing" here -->
-      <div id="trackInfo">
-        <img id="albumArt" src="" alt="Album Art" />
-        <div>
-          <p id="trackName"></p>
-          <p id="trackArtist"></p>
-        </div>
-      </div>
-      <div>
-        <button id="togglePlay">&#9654;</button>
-        <!-- Play/Pause -->
-        <button id="prevTrack">&#9664;</button>
-        <!-- Previous -->
-        <button id="nextTrack">&#9654;&#9654;</button>
-        <!-- Next -->
-      </div>
-    </div>
+    <!-- Three.js Journey Content -->
     <div class="threejs-journey is-hover-none js-threejs-journey">
-      <div class="message js-message">
-        <div class="boy">
-          <div class="variant is-hi">
-            <div class="body"></div>
-            <div class="arm js-boy-arm"></div>
-          </div>
-          <div class="variant is-yay"></div>
-          <div class="variant is-shrugging"></div>
-        </div>
-        <div class="bubble">
-          <div class="text">Hey! You seem to really enjoy my portfolio.</div>
-          <div class="tip"></div>
-        </div>
-      </div>
+      <!-- Three.js journey messages and interactions here -->
+    </div>
 
-      <div class="message js-message">
-        <div class="bubble">
-          <div class="text">
-            Would you like to learn how to create cool websites like this?
-          </div>
-          <div class="tip"></div>
-        </div>
-      </div>
-
-      <div class="message js-message is-answers">
-        <a href="#" class="answer is-no js-no">
-          <span class="background"></span>
-          <span class="hover"></span>
-          <span class="label">Nah, I'm good</span>
-        </a>
-        <a
-          href="https://threejs-journey.com?c=p1"
-          target="_blank"
-          rel="noopener"
-          class="answer is-yes js-yes"
-        >
-          <span class="background"></span>
-          <span class="hover"></span>
-          <span class="label">Yes, teach me!</span>
-        </a>
-      </div>
-
-      <div class="message js-message">
-        <div class="bubble">
-          <div class="text">
-            Alright then.<br />Have fun and try not to break my car!
-          </div>
-          <div class="tip"></div>
-        </div>
+    <!-- Spotify Player -->
+    <div id="spotifyPlayer">
+      <h2>Now Playing</h2>
+      <button id="minimizeButton">Minimize</button>
+      <div id="spotifyPlayerContainer">
+        <iframe
+          id="spotifyIframe"
+          src="https://open.spotify.com/embed/playlist/3Sg5A4Gmg8KfyXC504GU6y?utm_source=generator&theme=0"
+          width="100%"
+          height="352"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+        ></iframe>
       </div>
     </div>
+
+    <!-- Minimized Spotify Player -->
+    <div id="spotifyPlayerMinimized">
+      <button id="restoreButton">Show Playlist</button>
+    </div>
+
+    <!-- Main Script -->
+    
 
     <script>
-      window.onSpotifyWebPlaybackSDKReady = () => {
-        const token =
-          "BQB9cb8tNAQHnf1U01R4nAnEsrEaFqR1jPO8tTd3881h6eCoQS042x6nTuFFeccDwQLaXQdeZQoiEgI43ul231KrblzLZeR3_J2TqjZaDUXL6gCzLhcGyHEWGbxnPBk6Ttxh1VvpVta9TJYXReDEDFfEnbv6--O118HA1VughcfmNB8qDswMYc65HbUUTrwcuSLw0Fn8613udih0Tew"; // Replace with your actual access token
-        const player = new Spotify.Player({
-          name: "Web Playback SDK Player",
-          getOAuthToken: (cb) => {
-            cb(token);
-          },
-          volume: 0.5,
-        });
+      // Minimize and Restore Logic
+      const minimizeButton = document.getElementById("minimizeButton");
+      const restoreButton = document.getElementById("restoreButton");
+      const spotifyPlayer = document.getElementById("spotifyPlayer");
+      const spotifyPlayerMinimized = document.getElementById(
+        "spotifyPlayerMinimized"
+      );
 
-        player.addListener("ready", ({ device_id }) => {
-          console.log("Ready with Device ID", device_id);
-          window.device_id = device_id;
+      minimizeButton.addEventListener("click", () => {
+        spotifyPlayer.style.display = "none"; // Hide the full player
+        spotifyPlayerMinimized.style.display = "block"; // Show the minimized player
+      });
 
-          // Show the player once it's ready
-          document.getElementById("spotifyPlayer").style.display = "block";
-
-          // Start playing the playlist once ready
-          playPlaylist(device_id, "spotify:playlist:3Sg5A4Gmg8KfyXC504GU6y"); // Your playlist URI
-        });
-
-        player.addListener("not_ready", ({ device_id }) => {
-          console.log("Device ID has gone offline", device_id);
-        });
-
-        document.getElementById("togglePlay").onclick = function () {
-          player.togglePlay();
-        };
-
-        document.getElementById("prevTrack").onclick = function () {
-          player.previousTrack();
-        };
-
-        document.getElementById("nextTrack").onclick = function () {
-          player.nextTrack();
-        };
-
-        player.connect();
-
-        // Play the playlist
-        function playPlaylist(device_id, playlistUri) {
-          fetch(
-            `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`,
-            {
-              method: "PUT",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                context_uri: playlistUri, // context_uri for playlists
-              }),
-            }
-          )
-            .then((response) => {
-              if (response.ok) {
-                console.log("Playlist is playing!");
-              } else {
-                console.log(
-                  "Error playing playlist:",
-                  response.status,
-                  response.statusText
-                );
-              }
-            })
-            .catch((err) => console.log("Error playing playlist:", err));
-        }
-
-        // Function to update track info
-        function updateTrackInfo() {
-          fetch("https://api.spotify.com/v1/me/player/currently-playing", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data && data.item) {
-                const track = data.item;
-
-                // Update track name and artist
-                document.getElementById("trackName").textContent = track.name;
-                document.getElementById("trackArtist").textContent =
-                  track.artists.map((artist) => artist.name).join(", ");
-
-                // Update album art
-                const albumImages = track.album.images;
-                if (albumImages && albumImages.length > 0) {
-                  document.getElementById("albumArt").src = albumImages[0].url; // Use the first image
-                }
-              }
-            })
-            .catch((err) => console.log("Error fetching current track:", err));
-        }
-
-        // Call updateTrackInfo every 5 seconds to keep track info updated
-        setInterval(updateTrackInfo, 5000);
-
-        // Initial track info fetch
-        updateTrackInfo();
-      };
+      restoreButton.addEventListener("click", () => {
+        spotifyPlayer.style.display = "block"; // Show the full player
+        spotifyPlayerMinimized.style.display = "none"; // Hide the minimized player
+      });
     </script>
   </body>
 </html>
